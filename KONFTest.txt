@@ -1,3 +1,25 @@
-Hallo Zusammen
+Set-ExecutionPolicy bypass -Force
+Install-Module Microsoft.Graph
 
-Das ist ein Prod
+Connect-MgGraph -Scopes "CloudPC.ReadWrite.All"
+
+Select-MgProfile -Name "beta"
+$params = @{
+	"@odata.type" = "#microsoft.graph.cloudPcProvisioningPolicy"
+	Description = "Hallo Studierende, das ist ein Test"
+	DisplayName = "SIW-KONF-HFZH2020_V2"
+	DomainJoinConfiguration = @{
+		DomainJoinType = "azureADJoin"
+        regionName = "switzerlandnorth"
+	}
+	ImageDisplayName = "Windows 11 Enterprise + OS Optimizations 22H2"
+	ImageId = "MicrosoftWindowsDesktop_windows-ent-cpc_win11-22h2-ent-cpc-os"
+	ImageType = "gallery"
+        enableSingleSignOn = "false"
+			cloudPcNamingTemplate = "SIW-%RAND:5%"
+	WindowsSettings = @{
+		Language = "en-US"
+	}
+}
+
+New-MgDeviceManagementVirtualEndpointProvisioningPolicy -BodyParameter $params
